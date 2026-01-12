@@ -26,7 +26,7 @@ class BotService {
 
     console.log("response from external service:", response);
 
-    if (response.received) response = "message processed successfully.";
+    if (response.received) response = "message received successfully";
     else throw new Error("unexpected response received");
   }
 
