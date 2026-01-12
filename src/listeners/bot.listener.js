@@ -16,8 +16,7 @@ const registerListeners = (client) => {
 
     let response;
     try {
-      result = await bot.processMessage(message);
-      if (result.received) response = "message processed successfully.";
+      response = await bot.processMessage(message);
     } catch (error) {
       const wording = "error in message listener: " + error.message;
 
