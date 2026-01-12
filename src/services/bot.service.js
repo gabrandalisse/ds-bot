@@ -1,7 +1,6 @@
 class BotService {
   async processMessage(message) {
-    if (!message.content.includes("!execute"))
-      throw new Error("message without valid command");
+    this.validateIncomingMessage(message);
 
     let url;
     switch (message.channelId) {
@@ -9,8 +8,12 @@ class BotService {
         url = process.env.CARRY_WATCH_FLOW_URL;
         break;
 
-      case process.env.WEB_SRAPPING_CHANNEL_ID:
-        url = process.env.WEB_SRAPPING_FLOW_URL;
+      case process.env.WEB_SRAPING_CHANNEL_ID:
+        url = process.env.WEB_SRAPING_FLOW_URL;
+        break;
+
+      case process.env.NSFW_WEB_SRAPING_CHANNEL_ID:
+        url = process.env.NSFW_WEB_SRAPING_FLOW_URL;
         break;
 
       case process.env.AUCTION_WATCH_CHANNEL_ID:
@@ -26,8 +29,12 @@ class BotService {
 
     console.log("response from external service:", response);
 
-    if (response.received) response = "message received successfully";
+    if (response.received) response = "message received successfully, executing automated flow!";
     else throw new Error("unexpected response received");
+  }
+
+  validateIncomingMessage(msg) {
+    if (message.author.bot || !message.content.startsWith('!')) return;
   }
 
   async makeHTTPRequest(url) {

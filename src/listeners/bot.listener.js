@@ -12,8 +12,6 @@ const registerListeners = (client) => {
       `message received: "${message.content}" from channel ${message.channelId}`
     );
 
-    if (message.author.bot) return;
-
     let response;
     try {
       response = await bot.processMessage(message);
