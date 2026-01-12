@@ -13,13 +13,12 @@ const registerListeners = (client) => {
     );
 
     if (message.author.bot) return;
-    if (message.channelId !== process.env.CHANNEL_ID) return;
 
     try {
       const response = await bot.processMessage(message);
       await message.reply(response);
     } catch (error) {
-      console.error("error in message listener:", error);
+      console.error("error in message listener:", error.message);
     }
   });
 };
