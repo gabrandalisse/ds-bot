@@ -8,7 +8,7 @@ class BotService {
   strategy = null;
 
   async processMessage(message) {
-    if (message.content.contains("!execute"))
+    if (message.content.includes("!execute"))
       throw new Error("message without valid command");
 
     switch (message.channelId) {
@@ -35,7 +35,7 @@ class BotService {
     const response = await this.strategy.execute();
 
     console.log("response from external service:", response);
-    
+
     return response;
   }
 }

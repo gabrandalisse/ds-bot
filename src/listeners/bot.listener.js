@@ -14,11 +14,15 @@ const registerListeners = (client) => {
 
     if (message.author.bot) return;
 
+    let response;
     try {
-      const response = await bot.processMessage(message);
-      await message.reply(response);
+      response = await bot.processMessage(message);
     } catch (error) {
-      console.error("error in message listener:", error.message);
+      const wording = "error in message listener:" + error.message;
+      console.error(wording);
+      response = wording;
+    } finally {
+      await message.reply(response);
     }
   });
 };
