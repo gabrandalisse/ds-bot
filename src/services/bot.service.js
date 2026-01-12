@@ -34,7 +34,7 @@ class BotService {
   }
 
   validateIncomingMessage(msg) {
-    if (message.author.bot || !message.content.startsWith('!')) return;
+    if (msg.author.bot || !msg.content.startsWith('!')) return;
   }
 
   async makeHTTPRequest(url) {
