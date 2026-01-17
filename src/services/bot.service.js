@@ -1,47 +1,33 @@
+const HTTPClient = require("../clients/http.client");
+const AuctionWatchChannel = require("../domain/channels/auction-watch.channel");
+const CarryWatchChannel = require("../domain/channels/carry-watch.channel");
+const GeneralChannel = require("../domain/channels/general.channel");
+const NSFWWebScrapingChannel = require("../domain/channels/nsfw-web-sraping.channel");
+const WebScrapingChannel = require("../domain/channels/web-scraping.channel");
+
 class BotService {
-  async processMessage(message) {
-    this.validateIncomingMessage(message);
-
-    console.log('paso el validateIncoming');
-    
-
-    let url;
-    switch (message.channelId) {
-      case process.env.CARRY_WATCH_CHANNEL_ID:
-        url = process.env.CARRY_WATCH_FLOW_URL;
-        break;
-
-      case process.env.WEB_SRAPING_CHANNEL_ID:
-        url = process.env.WEB_SRAPING_FLOW_URL;
-        break;
-
-      case process.env.NSFW_WEB_SRAPING_CHANNEL_ID:
-        url = process.env.NSFW_WEB_SRAPING_FLOW_URL;
-        break;
-
-      case process.env.AUCTION_WATCH_CHANNEL_ID:
-        url = process.env.AUCTION_WATCH_FLOW_URL;
-        break;
-
-      default:
-        throw new Error("invalid channel id");
-    }
-
-    if (!url) throw new Error("url not found");
-    const response = await this.makeHTTPRequest(url);
-
-    console.log("response from external service:", response);
-
-    if (response.received) return "message received successfully, executing automated flow!";
-    else throw new Error("unexpected response received");
+  constructor() {
+    this.http = new HTTPClient();
+    this.channels = new Map([
+      [process.env.CARRY_WATCH_CHANNEL_ID, new CarryWatchChannel()],
+      [process.env.WEB_SCRAPING_CHANNEL_ID, new WebScrapingChannel()],
+      [process.env.NSFW_WEB_SCRAPING_CHANNEL_ID, new NSFWWebScrapingChannel()],
+      [process.env.AUCTION_WATCH_CHANNEL_ID, new AuctionWatchChannel()],
+      [process.env.GENERAL_CHANNEL_ID, new GeneralChannel()],
+    ]);
   }
 
-  async makeHTTPRequest(url) {
-    const response = await fetch(url, {
-      method: "GET",
-    });
+  async processMessage(message) {
+    const channel = this.channels.get(message.channelId);
+    if (!channel) throw new Error("channel not found");
 
-    return await response.json();
+    if (!channel.validateCommand(message)) throw new Error("invalid command");
+
+    const response = await this.http.get(channel.url);
+
+    if (response.received)
+      return "Message received successfully, executing automated flow!";
+    else throw new Error("unexpected response received");
   }
 }
 
