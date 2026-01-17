@@ -9,8 +9,10 @@ const registerListeners = (client) => {
 
   client.on("messageCreate", async (message) => {
     console.log(
-      `message received: "${message.content}" from channel ${message.channelId}`
+      `message received: "${message.content}" from channel ${message.channelId} by user ${message.author}`
     );
+
+    if (message.author.bot || !message.content.startsWith("!")) return;
 
     let response;
     try {

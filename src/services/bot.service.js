@@ -2,6 +2,9 @@ class BotService {
   async processMessage(message) {
     this.validateIncomingMessage(message);
 
+    console.log('paso el validateIncoming');
+    
+
     let url;
     switch (message.channelId) {
       case process.env.CARRY_WATCH_CHANNEL_ID:
@@ -29,12 +32,8 @@ class BotService {
 
     console.log("response from external service:", response);
 
-    if (response.received) response = "message received successfully, executing automated flow!";
+    if (response.received) return "message received successfully, executing automated flow!";
     else throw new Error("unexpected response received");
-  }
-
-  validateIncomingMessage(msg) {
-    if (msg.author.bot || !msg.content.startsWith('!')) return;
   }
 
   async makeHTTPRequest(url) {
