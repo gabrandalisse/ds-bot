@@ -7,6 +7,12 @@ class CarryWatchChannel {
   validateCommand(message) {
     return this.commands.some((cmd) => message.content.includes(cmd));
   }
+
+  requestParams(message) {
+    return {
+      url: this.url,
+    };
+  }
 }
 
 module.exports = CarryWatchChannel;

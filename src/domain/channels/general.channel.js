@@ -7,6 +7,18 @@ class GeneralChannel {
   validateCommand(message) {
     return this.commands.some((cmd) => message.content.includes(cmd));
   }
+
+  requestParams(message) {
+    const prompt = message.content.replace("!idea", "").trim();
+
+    return {
+      method: "POST",
+      data: {
+        prompt,
+      },
+      url: this.url,
+    };
+  }
 }
 
 module.exports = GeneralChannel;

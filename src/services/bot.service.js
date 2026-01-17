@@ -23,7 +23,9 @@ class BotService {
 
     if (!channel.validateCommand(message)) throw new Error("invalid command");
 
-    const response = await this.http.get(channel.url);
+    const response = await this.http.makeRequest(
+      channel.requestParams(message),
+    );
 
     if (response.received)
       return "Message received successfully, executing automated flow!";
