@@ -2,10 +2,16 @@ class HTTPClient {
   async makeRequest({ url, method = "GET", data = null }) {
     if (!url) throw new Error("URL is required in client");
 
-    const response = await fetch(url, {
+    const options = {
       method,
-      body: JSON.stringify(data),
-    });
+    };
+
+    if (data) {
+      options.body = JSON.stringify(data);
+      options.headers = { "Content-Type": "application/json" };
+    }
+
+    const response = await fetch(url, options);
 
     const result = await response.json();
 
